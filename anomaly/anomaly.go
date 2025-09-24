@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/vulcand/oxy/memmetrics"
-	"github.com/vulcand/vulcand/engine"
+	"github.com/ffhenkes/vulcand/engine"
 )
 
 const (

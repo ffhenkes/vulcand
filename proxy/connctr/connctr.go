@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"sync"
 
-	"github.com/vulcand/vulcand/conntracker"
+	"github.com/ffhenkes/vulcand/conntracker"
 )
 
 // T represents an active connection counter. It is supposed to be set as a

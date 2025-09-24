@@ -15,11 +15,11 @@ import (
 	"github.com/vulcand/oxy/memmetrics"
 	"github.com/vulcand/oxy/roundrobin"
 	"github.com/vulcand/oxy/stream"
-	"github.com/vulcand/vulcand/engine"
-	"github.com/vulcand/vulcand/plugin"
-	"github.com/vulcand/vulcand/proxy"
-	"github.com/vulcand/vulcand/proxy/backend"
-	"github.com/vulcand/vulcand/proxy/rtmcollect"
+	"github.com/ffhenkes/vulcand/engine"
+	"github.com/ffhenkes/vulcand/plugin"
+	"github.com/ffhenkes/vulcand/proxy"
+	"github.com/ffhenkes/vulcand/proxy/backend"
+	"github.com/ffhenkes/vulcand/proxy/rtmcollect"
 )
 
 // T represents a frontend instance. It implements http.Handler interface to be

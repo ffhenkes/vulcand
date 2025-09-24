@@ -7,8 +7,8 @@ import (
 
 	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
-	"github.com/vulcand/vulcand/engine"
-	"github.com/vulcand/vulcand/plugin"
+	"github.com/ffhenkes/vulcand/engine"
+	"github.com/ffhenkes/vulcand/plugin"
 )
 
 // Mem is exported to provide easy access to its internals

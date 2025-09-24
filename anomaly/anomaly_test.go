@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	. "github.com/vulcand/vulcand/engine"
+	. "github.com/ffhenkes/vulcand/engine"
 	. "gopkg.in/check.v1"
 )
 

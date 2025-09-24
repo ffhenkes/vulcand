@@ -22,11 +22,11 @@ import (
 
 	log "github.com/sirupsen/logrus"
 	"github.com/vulcand/oxy/testutils"
-	"github.com/vulcand/vulcand/engine"
-	"github.com/vulcand/vulcand/plugin/cacheprovider"
-	"github.com/vulcand/vulcand/proxy"
-	"github.com/vulcand/vulcand/stapler"
-	. "github.com/vulcand/vulcand/testutils"
+	"github.com/ffhenkes/vulcand/engine"
+	"github.com/ffhenkes/vulcand/plugin/cacheprovider"
+	"github.com/ffhenkes/vulcand/proxy"
+	"github.com/ffhenkes/vulcand/stapler"
+	. "github.com/ffhenkes/vulcand/testutils"
 	"golang.org/x/crypto/acme/autocert"
 	. "gopkg.in/check.v1"
 )

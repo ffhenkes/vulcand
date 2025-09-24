@@ -8,8 +8,8 @@ import (
 	"sync/atomic"
 
 	routelib "github.com/vulcand/route"
-	"github.com/vulcand/vulcand/engine"
-	"github.com/vulcand/vulcand/plugin/ratelimit"
+	"github.com/ffhenkes/vulcand/engine"
+	"github.com/ffhenkes/vulcand/plugin/ratelimit"
 	"golang.org/x/crypto/ocsp"
 )
 

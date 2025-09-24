@@ -3,7 +3,7 @@ package command
 import (
 	"github.com/codegangsta/cli"
 	"github.com/vulcand/route"
-	"github.com/vulcand/vulcand/engine"
+	"github.com/ffhenkes/vulcand/engine"
 )
 
 func NewFrontendCommand(cmd *Command) cli.Command {

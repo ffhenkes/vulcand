@@ -10,7 +10,7 @@ import (
 
 	"github.com/codegangsta/cli"
 	oxytrace "github.com/vulcand/oxy/trace"
-	"github.com/vulcand/vulcand/plugin"
+	"github.com/ffhenkes/vulcand/plugin"
 )
 
 const Type = "trace"

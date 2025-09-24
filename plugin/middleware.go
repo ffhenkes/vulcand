@@ -10,9 +10,9 @@ import (
 	"github.com/vulcand/oxy/forward"
 	"github.com/vulcand/oxy/roundrobin"
 	"github.com/vulcand/route"
-	"github.com/vulcand/vulcand/conntracker"
-	"github.com/vulcand/vulcand/plugin/cacheprovider"
-	"github.com/vulcand/vulcand/router"
+	"github.com/ffhenkes/vulcand/conntracker"
+	"github.com/ffhenkes/vulcand/plugin/cacheprovider"
+	"github.com/ffhenkes/vulcand/router"
 )
 
 // Middleware specification, used to construct new middlewares and plug them into CLI API and backends

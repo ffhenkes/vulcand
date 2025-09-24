@@ -10,11 +10,11 @@ import (
 	"github.com/mailgun/metrics"
 	"github.com/mailgun/timetools"
 	log "github.com/sirupsen/logrus"
-	"github.com/vulcand/vulcand/conntracker"
-	"github.com/vulcand/vulcand/engine"
-	"github.com/vulcand/vulcand/plugin"
-	"github.com/vulcand/vulcand/plugin/cacheprovider"
-	"github.com/vulcand/vulcand/router"
+	"github.com/ffhenkes/vulcand/conntracker"
+	"github.com/ffhenkes/vulcand/engine"
+	"github.com/ffhenkes/vulcand/plugin"
+	"github.com/ffhenkes/vulcand/plugin/cacheprovider"
+	"github.com/ffhenkes/vulcand/router"
 )
 
 type Proxy interface {

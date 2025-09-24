@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"github.com/codegangsta/cli"
-	"github.com/vulcand/vulcand/engine"
-	"github.com/vulcand/vulcand/plugin"
+	"github.com/ffhenkes/vulcand/engine"
+	"github.com/ffhenkes/vulcand/plugin"
 )
 
 func NewMiddlewareCommands(cmd *Command) []cli.Command {

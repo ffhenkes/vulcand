@@ -20,7 +20,7 @@ import (
 
 	"github.com/mailgun/timetools"
 	log "github.com/sirupsen/logrus"
-	"github.com/vulcand/vulcand/engine"
+	"github.com/ffhenkes/vulcand/engine"
 	"golang.org/x/crypto/ocsp"
 )
 
