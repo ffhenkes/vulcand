@@ -3,13 +3,11 @@ package command
 import (
 	"bytes"
 	"fmt"
-	"io/ioutil"
 	"net/http/httptest"
+	"os"
 	"strings"
 	"testing"
 
-	"github.com/gorilla/mux"
-	log "github.com/sirupsen/logrus"
 	"github.com/ffhenkes/vulcand/api"
 	"github.com/ffhenkes/vulcand/engine"
 	"github.com/ffhenkes/vulcand/engine/memng"
@@ -20,6 +18,8 @@ import (
 	"github.com/ffhenkes/vulcand/stapler"
 	"github.com/ffhenkes/vulcand/supervisor"
 	"github.com/ffhenkes/vulcand/testutils"
+	"github.com/gorilla/mux"
+	log "github.com/sirupsen/logrus"
 	. "gopkg.in/check.v1"
 )
 
@@ -84,12 +84,12 @@ func (s *CmdSuite) TestHostCRUD(c *C) {
 
 	keyPair := testutils.NewTestKeyPair()
 
-	fKey, err := ioutil.TempFile("", "vulcand")
+	fKey, err := os.CreateTemp("", "vulcand")
 	c.Assert(err, IsNil)
 	defer fKey.Close()
 	fKey.Write(keyPair.Key)
 
-	fCert, err := ioutil.TempFile("", "vulcand")
+	fCert, err := os.CreateTemp("", "vulcand")
 	c.Assert(err, IsNil)
 	defer fCert.Close()
 	fCert.Write(keyPair.Cert)
@@ -299,23 +299,23 @@ func (s *CmdSuite) TestReadKeyPair(c *C) {
 	key, err := secret.NewKeyString()
 	c.Assert(err, IsNil)
 
-	fKey, err := ioutil.TempFile("", "vulcand")
+	fKey, err := os.CreateTemp("", "vulcand")
 	c.Assert(err, IsNil)
 	defer fKey.Close()
 	fKey.Write(keyPair.Key)
 
-	fCert, err := ioutil.TempFile("", "vulcand")
+	fCert, err := os.CreateTemp("", "vulcand")
 	c.Assert(err, IsNil)
 	defer fCert.Close()
 	fCert.Write(keyPair.Cert)
 
-	fSealed, err := ioutil.TempFile("", "vulcand")
+	fSealed, err := os.CreateTemp("", "vulcand")
 	c.Assert(err, IsNil)
 	fSealed.Close()
 
 	s.run("secret", "seal_keypair", "-privateKey", fKey.Name(), "-cert", fCert.Name(), "-sealKey", key, "-f", fSealed.Name())
 
-	bytes, err := ioutil.ReadFile(fSealed.Name())
+	bytes, err := os.ReadFile(fSealed.Name())
 	c.Assert(err, IsNil)
 
 	box, err := secret.NewBoxFromKeyString(key)
@@ -332,13 +332,13 @@ func (s *CmdSuite) TestReadKeyPair(c *C) {
 }
 
 func (s *CmdSuite) TestNewKey(c *C) {
-	fKey, err := ioutil.TempFile("", "vulcand")
+	fKey, err := os.CreateTemp("", "vulcand")
 	c.Assert(err, IsNil)
 	fKey.Close()
 
 	s.run("secret", "new_key", "-f", fKey.Name())
 
-	bytes, err := ioutil.ReadFile(fKey.Name())
+	bytes, err := os.ReadFile(fKey.Name())
 	c.Assert(err, IsNil)
 
 	_, err = secret.NewBoxFromKeyString(string(bytes))

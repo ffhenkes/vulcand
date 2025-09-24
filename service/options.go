@@ -3,6 +3,7 @@ package service
 import (
 	"flag"
 	"fmt"
+	"os"
 	"strings"
 	"time"
 
@@ -86,26 +87,26 @@ func (o *listOptions) Set(value string) error {
 	return nil
 }
 
+// getEnvWithDefault returns the environment variable value or the default if not set
+func getEnvWithDefault(key, defaultValue string) string {
+	if value := os.Getenv(key); value != "" {
+		return value
+	}
+	return defaultValue
+}
+
 func validateOptions(o Options) (Options, error) {
 	if o.EndpointDialTimeout+o.EndpointReadTimeout >= o.ServerWriteTimeout {
 		fmt.Printf("!!!!!! WARN: serverWriteTimout(%s) should be > endpointDialTimeout(%s) + endpointReadTimeout(%s)\n\n",
 			o.ServerWriteTimeout, o.EndpointDialTimeout, o.EndpointReadTimeout)
 	}
-	flag.Visit(func(f *flag.Flag) {
-		if f.Name == "readTimeout" {
-			fmt.Printf("!!!!!! WARN: Using deprecated readTimeout flag, use serverReadTimeout instead\n\n")
-		}
-		if f.Name == "writeTimeout" {
-			fmt.Printf("!!!!!! WARN: Using deprecated writeTimeout flag, use serverWriteTimeout instead\n\n")
-		}
-	})
 	return o, nil
 }
 
 func ParseCommandLine() (options Options, err error) {
 	flag.Var(&options.EtcdNodes, "etcd", "Etcd discovery service API endpoints")
 	flag.IntVar(&options.EtcdApiVersion, "etcdApiVer", 2, "Etcd Client API version (When 3, Etcd 3.x API is used. All other values default to v2.)")
-	flag.StringVar(&options.EtcdKey, "etcdKey", "vulcand", "Etcd key for storing configuration")
+	flag.StringVar(&options.EtcdKey, "etcdKey", getEnvWithDefault("VULCAND_ETCD_KEY", "vulcand"), "Etcd key for storing configuration")
 	flag.StringVar(&options.EtcdCaFile, "etcdCaFile", "", "Path to CA file for etcd communication")
 	flag.StringVar(&options.EtcdCertFile, "etcdCertFile", "", "Path to cert file for etcd communication")
 	flag.StringVar(&options.EtcdKeyFile, "etcdKeyFile", "", "Path to key file for etcd communication")
@@ -124,9 +125,7 @@ func ParseCommandLine() (options Options, err error) {
 	flag.Var(&options.LogSeverity, "logSeverity", "logs at or above this level to the logging output")
 
 	flag.IntVar(&options.ServerMaxHeaderBytes, "serverMaxHeaderBytes", 1<<20, "Maximum size of request headers")
-	flag.DurationVar(&options.ServerReadTimeout, "readTimeout", time.Duration(60)*time.Second, "HTTP server read timeout (deprecated)")
 	flag.DurationVar(&options.ServerReadTimeout, "serverReadTimeout", time.Duration(60)*time.Second, "HTTP server read timeout")
-	flag.DurationVar(&options.ServerWriteTimeout, "writeTimeout", time.Duration(60)*time.Second, "HTTP server write timeout (deprecated)")
 	flag.DurationVar(&options.ServerWriteTimeout, "serverWriteTimeout", time.Duration(60)*time.Second, "HTTP server write timeout")
 	flag.DurationVar(&options.EndpointDialTimeout, "endpointDialTimeout", time.Duration(5)*time.Second, "Endpoint dial timeout")
 	flag.DurationVar(&options.EndpointReadTimeout, "endpointReadTimeout", time.Duration(50)*time.Second, "Endpoint read timeout")

@@ -3,7 +3,6 @@ package service
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"log/syslog"
 	"net"
 	"net/http"
@@ -16,10 +15,6 @@ import (
 
 	logrus_logstash "github.com/bshuster-repo/logrus-logstash-hook"
 	etcd "github.com/coreos/etcd/client"
-	"github.com/gorilla/mux"
-	"github.com/mailgun/metrics"
-	log "github.com/sirupsen/logrus"
-	logrus_syslog "github.com/sirupsen/logrus/hooks/syslog"
 	"github.com/ffhenkes/vulcand/api"
 	"github.com/ffhenkes/vulcand/engine"
 	"github.com/ffhenkes/vulcand/engine/etcdv2ng"
@@ -32,6 +27,10 @@ import (
 	"github.com/ffhenkes/vulcand/secret"
 	"github.com/ffhenkes/vulcand/stapler"
 	"github.com/ffhenkes/vulcand/supervisor"
+	"github.com/gorilla/mux"
+	"github.com/mailgun/metrics"
+	log "github.com/sirupsen/logrus"
+	logrus_syslog "github.com/sirupsen/logrus/hooks/syslog"
 )
 
 type ControlCode int
@@ -42,15 +41,25 @@ const (
 	ControlCodeForkChild
 )
 
+// Signal handling constants
+const (
+	// SignalChannelBufferSize is the buffer size for signal channels
+	SignalChannelBufferSize = 1024
+	// MetricsReportInterval is the interval for reporting system metrics
+	MetricsReportInterval = 300 * time.Millisecond
+	// ExitCodeError is the exit code used when the service exits with an error
+	ExitCodeError = 255
+)
+
 func waitForSignals() chan ControlCode {
-	sigC := make(chan os.Signal, 1024)
+	sigC := make(chan os.Signal, SignalChannelBufferSize)
 	signal.Notify(sigC, os.Interrupt, os.Kill, syscall.SIGTERM, syscall.SIGUSR2)
-	controlC := make(chan ControlCode, 1024)
+	controlC := make(chan ControlCode, SignalChannelBufferSize)
 
 	go func() {
 		for {
 			signal := <-sigC
-			log.Infof("Got signal '%s'", signal)
+			log.Debugf("Got signal '%s'", signal)
 
 			switch signal {
 			case syscall.SIGTERM, syscall.SIGINT:
@@ -68,6 +77,9 @@ func waitForSignals() chan ControlCode {
 	return controlC
 }
 
+// Run starts the vulcand service with the provided plugin registry.
+// It parses command line options, initializes the service, and starts all components.
+// Returns an error if the service fails to start or encounters a fatal error.
 func Run(registry *plugin.Registry) error {
 	options, err := ParseCommandLine()
 	if err != nil {
@@ -87,6 +99,8 @@ func Run(registry *plugin.Registry) error {
 	return nil
 }
 
+// Service represents the main vulcand service instance.
+// It manages the proxy, API server, metrics, and configuration engine.
 type Service struct {
 	client        etcd.Client
 	options       Options
@@ -99,6 +113,7 @@ type Service struct {
 	stapler       stapler.Stapler
 }
 
+// NewService creates a new Service instance with the provided options and registry.
 func NewService(options Options, registry *plugin.Registry) *Service {
 	return &Service{
 		registry: registry,
@@ -112,7 +127,7 @@ func (s *Service) Start(controlC chan ControlCode) error {
 	log.Infof("Service starts with options: %#v", s.options)
 
 	if s.options.PidPath != "" {
-		ioutil.WriteFile(s.options.PidPath, []byte(fmt.Sprint(os.Getpid())), 0644)
+		os.WriteFile(s.options.PidPath, []byte(fmt.Sprint(os.Getpid())), 0644)
 	}
 
 	if s.options.MetricsClient != nil {
@@ -150,7 +165,7 @@ func (s *Service) Start(controlC chan ControlCode) error {
 		go s.reportSystemMetrics()
 	}
 
-	sigC := make(chan os.Signal, 1024)
+	sigC := make(chan os.Signal, SignalChannelBufferSize)
 	signal.Notify(sigC, syscall.SIGCHLD)
 
 	// Block until a signal is received or we got an error
@@ -365,7 +380,7 @@ func (s *Service) newEngine() error {
 				EtcdKeyFile:             s.options.EtcdKeyFile,
 				EtcdConsistency:         s.options.EtcdConsistency,
 				EtcdSyncIntervalSeconds: s.options.EtcdSyncIntervalSeconds,
-				Box: box,
+				Box:                     box,
 			})
 	} else {
 		ng, err = etcdv2ng.New(
@@ -378,7 +393,7 @@ func (s *Service) newEngine() error {
 				EtcdKeyFile:             s.options.EtcdKeyFile,
 				EtcdConsistency:         s.options.EtcdConsistency,
 				EtcdSyncIntervalSeconds: s.options.EtcdSyncIntervalSeconds,
-				Box: box,
+				Box:                     box,
 			})
 	}
 	if err != nil {
@@ -398,7 +413,7 @@ func (s *Service) reportSystemMetrics() {
 		s.metricsClient.ReportRuntimeMetrics("sys", 1.0)
 		// we have 256 time buckets for gc stats, GC is being executed every 4ms on average
 		// so we have 256 * 4 = 1024 around one second to report it. To play safe, let's report every 300ms
-		time.Sleep(300 * time.Millisecond)
+		time.Sleep(MetricsReportInterval)
 	}
 }
 
@@ -413,15 +428,15 @@ func (s *Service) newProxy(id int) (proxy.Proxy, error) {
 	}
 
 	return builder.NewProxy(id, s.stapler, proxy.Options{
-		MetricsClient:      s.metricsClient,
-		DialTimeout:        s.options.EndpointDialTimeout,
-		ReadTimeout:        s.options.ServerReadTimeout,
-		WriteTimeout:       s.options.ServerWriteTimeout,
-		MaxHeaderBytes:     s.options.ServerMaxHeaderBytes,
-		DefaultListener:    constructDefaultListener(s.options),
-		TrustForwardHeader: s.options.TrustForwardHeader,
-		NotFoundMiddleware: s.registry.GetNotFoundMiddleware(),
-		Router:             s.registry.GetRouter(),
+		MetricsClient:             s.metricsClient,
+		DialTimeout:               s.options.EndpointDialTimeout,
+		ReadTimeout:               s.options.ServerReadTimeout,
+		WriteTimeout:              s.options.ServerWriteTimeout,
+		MaxHeaderBytes:            s.options.ServerMaxHeaderBytes,
+		DefaultListener:           constructDefaultListener(s.options),
+		TrustForwardHeader:        s.options.TrustForwardHeader,
+		NotFoundMiddleware:        s.registry.GetNotFoundMiddleware(),
+		Router:                    s.registry.GetRouter(),
 		IncomingConnectionTracker: s.registry.GetIncomingConnectionTracker(),
 		FrontendListeners:         s.registry.GetFrontendListeners(),
 		CacheProvider:             cacheProvider,

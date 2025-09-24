@@ -7,10 +7,10 @@ import (
 	"net/url"
 	"sync"
 
-	"github.com/pkg/errors"
-	log "github.com/sirupsen/logrus"
 	"github.com/ffhenkes/vulcand/engine"
 	"github.com/ffhenkes/vulcand/proxy"
+	"github.com/pkg/errors"
+	log "github.com/sirupsen/logrus"
 )
 
 // T represents a backend type. It maintains a list of backend servers and
@@ -100,8 +100,9 @@ func (be *T) String() string {
 }
 
 // Close closes all idle connections to backends.
+// Note: This only closes idle connections. Active connections will be closed
+// when they complete their current request or timeout.
 func (be *T) Close() error {
-	// FIXME should not we close all connections here?
 	be.httpTp.CloseIdleConnections()
 	return nil
 }
@@ -125,7 +126,8 @@ func (be *T) Update(beCfg engine.Backend, opts proxy.Options) (bool, error) {
 		return false, errors.Wrap(err, "bad config")
 	}
 
-	// FIXME: But what about active connections?
+	// Close idle connections before updating transport configuration.
+	// Active connections will continue using the old transport until they complete.
 	be.httpTp.CloseIdleConnections()
 
 	be.httpCfg = beCfg.HTTPSettings()

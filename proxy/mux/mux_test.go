@@ -12,7 +12,6 @@ import (
 	"fmt"
 	"html/template"
 	"io"
-	"io/ioutil"
 	"math/big"
 	"net/http"
 	"net/http/httptest"
@@ -20,13 +19,13 @@ import (
 	"testing"
 	"time"
 
-	log "github.com/sirupsen/logrus"
-	"github.com/vulcand/oxy/testutils"
 	"github.com/ffhenkes/vulcand/engine"
 	"github.com/ffhenkes/vulcand/plugin/cacheprovider"
 	"github.com/ffhenkes/vulcand/proxy"
 	"github.com/ffhenkes/vulcand/stapler"
 	. "github.com/ffhenkes/vulcand/testutils"
+	log "github.com/sirupsen/logrus"
+	"github.com/vulcand/oxy/testutils"
 	"golang.org/x/crypto/acme/autocert"
 	. "gopkg.in/check.v1"
 )
@@ -388,9 +387,7 @@ func (s *ServerSuite) TestHostKeyPairUpdate(c *C) {
 	c.Assert(certserial1, Not(Equals), certserial2)
 }
 
-//
 // Test AutoCert generation - simplest case.
-//
 func (s *ServerSuite) TestServerHTTPSAutoCert(c *C) {
 	var req *http.Request
 	e := testutils.NewHandler(func(w http.ResponseWriter, r *http.Request) {
@@ -433,9 +430,7 @@ func (s *ServerSuite) TestServerHTTPSAutoCert(c *C) {
 	c.Assert(req.Header.Get("X-Forwarded-Proto"), Equals, "https")
 }
 
-//
 // Test AutoCert failure when an invalid host is requested.
-//
 func (s *ServerSuite) TestServerHTTPSAutoCertInvalid(c *C) {
 	var req *http.Request
 	e := testutils.NewHandler(func(w http.ResponseWriter, r *http.Request) {
@@ -476,10 +471,8 @@ func (s *ServerSuite) TestServerHTTPSAutoCertInvalid(c *C) {
 	c.Assert(err, NotNil)
 }
 
-//
 // Ensures that changing of AutoCert settings on a host, take
 // effect immediately.
-//
 func (s *ServerSuite) TestHostAutoCertUpdate(c *C) {
 	e := testutils.NewResponder("Hi, I'm endpoint")
 	defer e.Close()
@@ -535,10 +528,8 @@ func (s *ServerSuite) TestHostAutoCertUpdate(c *C) {
 	c.Assert(GETResponse(c, b.FrontendURL("/"), testutils.Host("example.org")), Equals, "Hi, I'm endpoint")
 }
 
-//
 // Ensure that when the AutoCert endpoint goes down, and cert is not cached,
 // that it is indeed expired. This ensures we don't serve stale certs by accident.
-//
 func (s *ServerSuite) TestHostAutoCertExpires(c *C) {
 	e := testutils.NewResponder("Hi, I'm endpoint")
 	defer e.Close()
@@ -586,11 +577,9 @@ func (s *ServerSuite) TestHostAutoCertExpires(c *C) {
 	c.Assert(err, NotNil)
 }
 
-//
 // This ensures that the AutoCert cache, when provided, is actually used.
 // This is tested by generating an Autocert, then closing the ACME endpoint, an
 // ensuring the cached cert is still served (ensuring the ACME call isn't made.)
-//
 func (s *ServerSuite) TestHostAutoCertCache(c *C) {
 	e := testutils.NewResponder("Hi, I'm endpoint")
 	defer e.Close()
@@ -644,9 +633,7 @@ func (s *ServerSuite) TestHostAutoCertCache(c *C) {
 	c.Assert(GETResponse(c, b.FrontendURL("/"), testutils.Host("example.org")), Equals, "Hi, I'm endpoint")
 }
 
-//
 // Test AutoCert OCSP stapling.
-//
 func (s *ServerSuite) TestServerHTTPSAutoCertOCSPStapling(c *C) {
 	var req *http.Request
 	e := testutils.NewHandler(func(w http.ResponseWriter, r *http.Request) {
@@ -703,9 +690,7 @@ func (s *ServerSuite) TestServerHTTPSAutoCertOCSPStapling(c *C) {
 	c.Assert(s.mux.stapler.HasHost(hk), Equals, false)
 }
 
-//
 // Test AutoCert generation with an RSA client auth ID
-//
 func (s *ServerSuite) TestServerAutoCertRSAClientKey(c *C) {
 	var req *http.Request
 	e := testutils.NewHandler(func(w http.ResponseWriter, r *http.Request) {
@@ -749,9 +734,7 @@ func (s *ServerSuite) TestServerAutoCertRSAClientKey(c *C) {
 	c.Assert(req.Header.Get("X-Forwarded-Proto"), Equals, "https")
 }
 
-//
 // Test AutoCert generation with an ECDSA client auth ID
-//
 func (s *ServerSuite) TestServerAutoCertECClientKey(c *C) {
 	var req *http.Request
 	e := testutils.NewHandler(func(w http.ResponseWriter, r *http.Request) {
@@ -1770,7 +1753,7 @@ func startACMEServerStub(c *C, man *autocert.Manager, domain string, jwkPayload 
 			}
 			// client key registration
 		case "/new-reg":
-			body, err := ioutil.ReadAll(r.Body)
+			body, err := io.ReadAll(r.Body)
 			c.Assert(err, IsNil)
 			if jwkPayload != "" {
 				var req struct {

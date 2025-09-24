@@ -11,16 +11,16 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net"
 	"net/http"
 	"sync"
 	"sync/atomic"
 	"time"
 
+	"github.com/ffhenkes/vulcand/engine"
 	"github.com/mailgun/timetools"
 	log "github.com/sirupsen/logrus"
-	"github.com/ffhenkes/vulcand/engine"
 	"golang.org/x/crypto/ocsp"
 )
 
@@ -553,7 +553,7 @@ func (s *stapler) getOCSPResponse(server string, request []byte, issuer *x509.Ce
 	if err != nil {
 		return nil, nil, err
 	}
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	resp.Body.Close()
 
 	re, err := ocsp.ParseResponse(body, issuer)

@@ -2,7 +2,6 @@ package rewrite
 
 import (
 	"io"
-	"io/ioutil"
 	"net/http"
 	"text/template"
 )
@@ -18,7 +17,7 @@ type data struct {
 //
 // Template is standard Go's http://golang.org/pkg/text/template/.
 func Apply(in io.Reader, out io.Writer, request *http.Request) error {
-	body, err := ioutil.ReadAll(in)
+	body, err := io.ReadAll(in)
 	if err != nil {
 		return err
 	}

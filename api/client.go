@@ -3,17 +3,15 @@ package api
 import (
 	"bytes"
 	"fmt"
-	"time"
-
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 	"strings"
+	"time"
 
 	"github.com/ffhenkes/vulcand/engine"
 	"github.com/ffhenkes/vulcand/plugin"
 	"github.com/ffhenkes/vulcand/utils/json"
-
 	log "github.com/sirupsen/logrus"
 )
 
@@ -327,7 +325,7 @@ func (c *Client) RoundTrip(fn RoundTripFn) ([]byte, error) {
 		return nil, err
 	}
 	defer response.Body.Close()
-	responseBody, err := ioutil.ReadAll(response.Body)
+	responseBody, err := io.ReadAll(response.Body)
 	if err != nil {
 		return nil, err
 	}

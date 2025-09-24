@@ -7,19 +7,19 @@ import (
 	"crypto/x509"
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"net"
 	"net/http"
+	"os"
 	"regexp"
 	"strings"
 	"time"
 
 	etcd "github.com/coreos/etcd/client"
-	log "github.com/sirupsen/logrus"
 	"github.com/ffhenkes/vulcand/engine"
 	"github.com/ffhenkes/vulcand/plugin"
 	"github.com/ffhenkes/vulcand/secret"
 	"github.com/ffhenkes/vulcand/utils/json"
+	log "github.com/sirupsen/logrus"
 	"golang.org/x/net/context"
 )
 
@@ -260,7 +260,7 @@ func (n *ng) newHttpTransport() etcd.CancelableTransport {
 	if n.options.EtcdCertFile != "" && n.options.EtcdKeyFile != "" {
 		var rpool *x509.CertPool = nil
 		if n.options.EtcdCaFile != "" {
-			if pemBytes, err := ioutil.ReadFile(n.options.EtcdCaFile); err == nil {
+			if pemBytes, err := os.ReadFile(n.options.EtcdCaFile); err == nil {
 				rpool = x509.NewCertPool()
 				rpool.AppendCertsFromPEM(pemBytes)
 			} else {

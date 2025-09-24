@@ -3,7 +3,6 @@ package command
 import (
 	"fmt"
 	"io"
-	"io/ioutil"
 	"os"
 	"strings"
 
@@ -91,7 +90,7 @@ func readKeyPair(certPath, keyPath string) (*engine.KeyPair, error) {
 		return nil, err
 	}
 	defer fKey.Close()
-	key, err := ioutil.ReadAll(fKey)
+	key, err := io.ReadAll(fKey)
 	if err != nil {
 		return nil, err
 	}
@@ -101,7 +100,7 @@ func readKeyPair(certPath, keyPath string) (*engine.KeyPair, error) {
 		return nil, err
 	}
 	defer fCert.Close()
-	cert, err := ioutil.ReadAll(fCert)
+	cert, err := io.ReadAll(fCert)
 	if err != nil {
 		return nil, err
 	}

@@ -3,7 +3,7 @@ package api
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 	"runtime"
@@ -12,12 +12,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/gorilla/mux"
-	log "github.com/sirupsen/logrus"
 	"github.com/ffhenkes/vulcand/anomaly"
 	"github.com/ffhenkes/vulcand/engine"
 	"github.com/ffhenkes/vulcand/plugin"
 	"github.com/ffhenkes/vulcand/router"
+	"github.com/gorilla/mux"
+	log "github.com/sirupsen/logrus"
 )
 
 type ProxyController struct {
@@ -534,7 +534,7 @@ func handlerWithBody(fn handlerWithBodyFn) http.HandlerFunc {
 			return
 		}
 
-		body, err := ioutil.ReadAll(r.Body)
+		body, err := io.ReadAll(r.Body)
 		if err != nil {
 			sendResponse(w, fmt.Sprintf("failed to read request body, err=%v", err), http.StatusInternalServerError)
 			return
