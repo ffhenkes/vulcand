@@ -1,9 +1,9 @@
 package builder
 
 import (
-	"github.com/vulcand/vulcand/proxy"
-	"github.com/vulcand/vulcand/proxy/mux"
-	"github.com/vulcand/vulcand/stapler"
+	"github.com/ffhenkes/vulcand/proxy"
+	"github.com/ffhenkes/vulcand/proxy/mux"
+	"github.com/ffhenkes/vulcand/stapler"
 )
 
 // NewProxy returns a new Proxy instance.

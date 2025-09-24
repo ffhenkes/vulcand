@@ -13,7 +13,7 @@ import (
 	"github.com/codegangsta/cli"
 	log "github.com/sirupsen/logrus"
 	"github.com/vulcand/oxy/utils"
-	"github.com/vulcand/vulcand/plugin"
+	"github.com/ffhenkes/vulcand/plugin"
 )
 
 const Type = "rewrite"

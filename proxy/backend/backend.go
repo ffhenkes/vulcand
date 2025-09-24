@@ -9,8 +9,8 @@ import (
 
 	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
-	"github.com/vulcand/vulcand/engine"
-	"github.com/vulcand/vulcand/proxy"
+	"github.com/ffhenkes/vulcand/engine"
+	"github.com/ffhenkes/vulcand/proxy"
 )
 
 // T represents a backend type. It maintains a list of backend servers and

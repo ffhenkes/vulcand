@@ -18,9 +18,9 @@ import (
 
 	etcd "github.com/coreos/etcd/client"
 	"github.com/vulcand/oxy/testutils"
-	"github.com/vulcand/vulcand/engine"
-	"github.com/vulcand/vulcand/secret"
-	. "github.com/vulcand/vulcand/testutils"
+	"github.com/ffhenkes/vulcand/engine"
+	"github.com/ffhenkes/vulcand/secret"
+	. "github.com/ffhenkes/vulcand/testutils"
 	. "gopkg.in/check.v1"
 )
 

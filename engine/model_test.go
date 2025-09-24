@@ -7,8 +7,8 @@ import (
 	"time"
 
 	"github.com/vulcand/route"
-	"github.com/vulcand/vulcand/plugin"
-	"github.com/vulcand/vulcand/plugin/connlimit"
+	"github.com/ffhenkes/vulcand/plugin"
+	"github.com/ffhenkes/vulcand/plugin/connlimit"
 	. "gopkg.in/check.v1"
 )
 

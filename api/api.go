@@ -14,10 +14,10 @@ import (
 
 	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"
-	"github.com/vulcand/vulcand/anomaly"
-	"github.com/vulcand/vulcand/engine"
-	"github.com/vulcand/vulcand/plugin"
-	"github.com/vulcand/vulcand/router"
+	"github.com/ffhenkes/vulcand/anomaly"
+	"github.com/ffhenkes/vulcand/engine"
+	"github.com/ffhenkes/vulcand/plugin"
+	"github.com/ffhenkes/vulcand/router"
 )
 
 type ProxyController struct {

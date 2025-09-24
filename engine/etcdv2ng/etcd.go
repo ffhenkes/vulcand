@@ -16,10 +16,10 @@ import (
 
 	etcd "github.com/coreos/etcd/client"
 	log "github.com/sirupsen/logrus"
-	"github.com/vulcand/vulcand/engine"
-	"github.com/vulcand/vulcand/plugin"
-	"github.com/vulcand/vulcand/secret"
-	"github.com/vulcand/vulcand/utils/json"
+	"github.com/ffhenkes/vulcand/engine"
+	"github.com/ffhenkes/vulcand/plugin"
+	"github.com/ffhenkes/vulcand/secret"
+	"github.com/ffhenkes/vulcand/utils/json"
 	"golang.org/x/net/context"
 )
 

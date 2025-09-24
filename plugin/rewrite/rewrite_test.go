@@ -9,7 +9,7 @@ import (
 
 	"github.com/codegangsta/cli"
 	"github.com/vulcand/oxy/testutils"
-	"github.com/vulcand/vulcand/plugin"
+	"github.com/ffhenkes/vulcand/plugin"
 	. "gopkg.in/check.v1"
 )
 

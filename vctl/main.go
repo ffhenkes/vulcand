@@ -3,8 +3,8 @@ package main
 import (
 	"os"
 
-	"github.com/vulcand/vulcand/plugin/registry"
-	"github.com/vulcand/vulcand/vctl/command"
+	"github.com/ffhenkes/vulcand/plugin/registry"
+	"github.com/ffhenkes/vulcand/vctl/command"
 )
 
 var vulcanUrl string

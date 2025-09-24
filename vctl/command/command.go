@@ -8,10 +8,10 @@ import (
 	"strings"
 
 	"github.com/codegangsta/cli"
-	"github.com/vulcand/vulcand/api"
-	"github.com/vulcand/vulcand/engine"
-	"github.com/vulcand/vulcand/plugin"
-	"github.com/vulcand/vulcand/secret"
+	"github.com/ffhenkes/vulcand/api"
+	"github.com/ffhenkes/vulcand/engine"
+	"github.com/ffhenkes/vulcand/plugin"
+	"github.com/ffhenkes/vulcand/secret"
 )
 
 type Command struct {

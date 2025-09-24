@@ -31,7 +31,7 @@ import (
 
 	"github.com/codegangsta/cli"
 	"github.com/vulcand/oxy/cbreaker"
-	"github.com/vulcand/vulcand/plugin"
+	"github.com/ffhenkes/vulcand/plugin"
 )
 
 const Type = "cbreaker"

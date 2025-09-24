@@ -5,8 +5,8 @@ import (
 	"time"
 
 	"github.com/pkg/errors"
-	"github.com/vulcand/vulcand/engine"
-	"github.com/vulcand/vulcand/proxy"
+	"github.com/ffhenkes/vulcand/engine"
+	"github.com/ffhenkes/vulcand/proxy"
 	. "gopkg.in/check.v1"
 )
 

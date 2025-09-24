@@ -6,9 +6,9 @@ import (
 	"testing"
 
 	etcd "github.com/coreos/etcd/clientv3"
-	"github.com/vulcand/vulcand/engine/test"
-	"github.com/vulcand/vulcand/plugin/registry"
-	"github.com/vulcand/vulcand/secret"
+	"github.com/ffhenkes/vulcand/engine/test"
+	"github.com/ffhenkes/vulcand/plugin/registry"
+	"github.com/ffhenkes/vulcand/secret"
 
 	"golang.org/x/net/context"
 	. "gopkg.in/check.v1"

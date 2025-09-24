@@ -8,10 +8,10 @@ import (
 	"time"
 
 	"github.com/codegangsta/cli"
+	"github.com/ffhenkes/vulcand/plugin"
 	"github.com/mailgun/timetools"
 	"github.com/vulcand/oxy/ratelimit"
 	"github.com/vulcand/oxy/utils"
-	"github.com/vulcand/vulcand/plugin"
 )
 
 // Spec is an entry point of a plugin and will be called to register this middleware plugin withing vulcand
@@ -93,7 +93,7 @@ func (r *RateLimit) NewHandler(next http.Handler) (http.Handler, error) {
 		return nil, err
 	}
 	return ratelimit.New(next, r.extract, defaultRates,
-		ratelimit.ExtractRates(r.extractRates), ratelimit.Clock(r.clock))
+		ratelimit.ExtractRates(r.extractRates))
 }
 
 func (rl *RateLimit) String() string {
